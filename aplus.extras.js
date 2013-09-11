@@ -3,39 +3,40 @@ Aplus.pool = function() {
 
 	// get promises
 	var promises = [].slice.call(arguments, 0);
+	var state = 1;
+	var values = new Array(promises.length);
+	var toGo = promises.length;
 
 	// promise to return
 	var promise = Aplus();
 
 	// whenever a promise completes
 	var checkFinished = function() {
-
-		var state = 1;
-		var value = [];
-
-		// check the state of each promise
-		for (var i = 0; i < promises.length; i++) {
-			// if any aren't done then return
-			if (promises[i].state === 0) {
-				return;
-			}
-
-			// if any error then we want to pass error state
-			if (promises[i].state === 2) {
-				state = 2;
-			}
-
-			// collect the values
-			value.push(promises[i].value);
+		// check if all the promises have returned
+		if (toGo) {
+			return;
 		}
-
 		// set the state with all values if all are complete
-		promise.changeState(state, value);
+		promise.changeState(state, values);
 	};
 
 	// whenever a promise finishes check to see if they're all finished
 	for (var i = 0; i < promises.length; i++) {
-		promises[i].then(checkFinished, checkFinished);
+		(function(index) {
+			promises[index].then(function(value) {
+				// on success
+				values[index] = value;
+				toGo--;
+				checkFinished();
+			}, function(value) {
+				// on error
+				values[index] = value;
+				toGo--;
+				// set error state
+				state = 2;
+				checkFinished();
+			});
+		})(i);
 	};
 
 	// promise at the end
