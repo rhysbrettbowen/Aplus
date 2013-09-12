@@ -53,7 +53,7 @@ Aplus.first = function() {
 	var promise = Aplus();
 
 	// if all promises error out then we want to return an error
-	Aplus.pool.apply(promises).then(undefined, function(value) {
+	Aplus.pool.apply(Aplus, promises).then(undefined, function(value) {
 		promise.reject(value);
 	});
 
