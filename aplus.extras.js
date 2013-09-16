@@ -2,7 +2,7 @@
 Aplus.pool = function() {
 
 	// get promises
-	var promises = [].slice.call(arguments, 0);
+	var promises = Array.slice.call(arguments, 0);
 	var state = 1;
 	var values = new Array(promises.length);
 	var toGo = promises.length;
@@ -47,7 +47,7 @@ Aplus.pool = function() {
 Aplus.first = function() {
 
 	// get all promises
-	var promises = [].slice.call(arguments, 0);
+	var promises = Array.slice.call(arguments, 0);
 
 	// promise to return
 	var promise = Aplus();
@@ -89,7 +89,7 @@ Aplus.toPromise = function(fn) {
 		// run original function with the error and success functions
 		// that will set the promise state when done
 		fn.apply(this,
-			[errorFn, successFn].concat([].slice.call(arguments, 0)));
+			[errorFn, successFn].concat(Array.slice.call(arguments, 0)));
 
 		return promise;
 	};
